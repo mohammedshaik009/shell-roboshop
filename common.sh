@@ -16,7 +16,7 @@ echo -e "$TIMESTAMP [INFO] script started"
 
 USERID=$(id -u)
 #check root user or not
-check_root(){
+check_root() {
     if [ $USERID -ne 0 ]; then
         echo -e "$TIMESTAMP [ERROR] $R please run this scirpt with root access $N" | tee -a $LOGS_FILE
         exit 1
@@ -31,6 +31,6 @@ VALIDATE() {
     fi
 }
 
-print_total_time(){
+print_total_time() {
     echo -e "$TIMESTAMP [INFO] script executed in $G $SECONDS seconds $N"
 }
