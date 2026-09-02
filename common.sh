@@ -31,6 +31,7 @@ VALIDATE() {
     fi
 }
 
+
 print_total_time(){
-    echo -e "script executed in $G $SECONDS seconds $N"
+    echo -e "script exceuted in seconds: $G $SECONDS $N"
 }
