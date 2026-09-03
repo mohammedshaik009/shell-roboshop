@@ -72,7 +72,7 @@ VALIDATE $? "installing dependencies"
 systemd_setup(){
 cp $SCRIPT_DIR/$app_name.service /etc/systemd/system/$app_name.service
 VALIDATE $? "created systemctl service"
-systemctl daemon-reloaded
+systemctl daemon-reload
 systemctl enable $app_name
 VALIDATE $? "Enabled $app_name"
 }
