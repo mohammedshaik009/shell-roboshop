@@ -11,16 +11,16 @@ G="\e[32m"
 Y="\e[33m"
 N="\e[0m"
 
-echo -e "$TIMESTAMP [INFO] script started"
+echo -e "$TIMESTAMP [INFO] script started " 
 
 USERID=$(id -u)
 #check root user or not
-check_root(){
+check_rooot(){
     if [ $USERID -ne 0 ]; then
         echo -e "$TIMESTAMP [ERROR] $R please run this scirpt with root access $N" | tee -a $LOGS_FILE
         exit 1
     fi
-}
+
 
 VALIDATE() {
     if [ $1 -ne 0 ]; then
@@ -33,5 +33,5 @@ VALIDATE() {
 
 
 print_total_time(){
-    echo -e "script exceuted in seconds: $G $SECONDS $N"
+    echo -e "script executed in seconds: $G $SECONDS $N"
 }
