@@ -21,5 +21,6 @@ cp $SCRIPT_DIR/nginx.conf /etc/nginx/nginx.conf
 VALIDATE $? "created nginx configuration"
 
 systemctl enable nginx &>> $LOGS_FILE
-app_restart
+systemctl restart nginx &>> $LOGS_FILE
+VALIDATE $? "restarted nginx"
 print_total_time
