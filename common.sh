@@ -6,6 +6,7 @@ sudo chown -R ec2-user:ec2-user $LOGS_FOLDER
 sudo chmod -R 755 $LOGS_FOLDER
 LOGS_FILE="$LOGS_FOLDER/$0.log"
 TIMESTAMP=$(date "+%Y-%m-%d %H:%M:%S")
+SCRIPT_DIR="$PWD"
 R="\e[31m"
 G="\e[32m" 
 Y="\e[33m"
@@ -33,4 +34,51 @@ VALIDATE() {
 
 print_total_time(){
     echo -e "script exceuted in seconds: $G $SECONDS $N"
+}
+
+app_name(){
+id roboshop  &>> $LOGS_FILE
+if [ $? -ne 0 ]; then
+    useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
+    VALIDATE $? "setting up system user"
+else
+    echo -e "system user roboshop already created ...$Y SKIPPING $N"
+fi
+
+rm -rf /app 
+VALIDATE $? "removing existing code"
+ 
+mkdir -p /app &>> $LOGS_FILE
+VALIDATE $? "creating app directory"
+
+rm -rf /tmp/$app_name.zip  &>> $LOGS_FILE
+VALIDATE $? "removing $app_name.zip"
+
+curl -o /tmp/$app_name.zip https://roboshop-artifacts.s3.amazonaws.com/$app_name-v3.zip  &>> $LOGS_FILE
+cd /app 
+unzip /tmp/$app_name.zip  &>> $LOGS_FILE
+VALIDATE $? "downloaded and extracted $app_name code"
+}
+
+nodejs_setup(){  
+dnf module disable nodejs -y   &>> $LOGS_FILE
+dnf module enable nodejs:20 -y  &>> $LOGS_FILE
+dnf install nodejs -y   &>> $LOGS_FILE
+VALIDATE $? "installing nodejs"
+npm install &>> $LOGS_FILE
+VALIDATE $? "installing dependencies"
+}
+
+systemd_setup(){
+cp $SCRIPT_DIR/$app_name.service /etc/systemd/system/$app_name.service
+VALIDATE $? "created systemctl service"
+systemctl daemon-reloaded
+systemctl enable $app_name
+VALIDATE $? "Enabled $app_name"
+}
+
+app_restart(){
+systemctl enable $app_name &>> $LOGS_FILE
+systemctl restart $app_name &>> $LOGS_FILE
+VALIDATE $? "Restarting $app_name"
 }
