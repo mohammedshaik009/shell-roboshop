@@ -3,10 +3,10 @@
 app_name=catalogue
 source ./common.sh
 check_root
-app_name
+app_setup
 nodejs_setup
 systemd_setup
-app_restart
+
 cp $SCRIPT_DIR/mongo.repo /etc/yum.repos.d/mongo.repo
 VALIDATE $? "Added mongo.repo"
 
@@ -20,5 +20,5 @@ if [ "$INDEX" -lt 0 ]; then
 else
     echo -e "Products already loaded ...$Y SKIPPING $N"
 fi
-
+app_restart
 print_total_time

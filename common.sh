@@ -36,7 +36,7 @@ print_total_time(){
     echo -e "script exceuted in seconds: $G $SECONDS $N"
 }
 
-app_name(){
+app_setup(){
 id roboshop  &>> $LOGS_FILE
 if [ $? -ne 0 ]; then
     useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
@@ -73,8 +73,6 @@ systemd_setup(){
 cp $SCRIPT_DIR/$app_name.service /etc/systemd/system/$app_name.service
 VALIDATE $? "created systemctl service"
 systemctl daemon-reload
-systemctl enable $app_name
-VALIDATE $? "Enabled $app_name"
 }
 
 app_restart(){
