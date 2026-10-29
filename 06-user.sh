@@ -42,17 +42,17 @@ else
 fi
 
 rm -rf /app &>> $LOGS_FILE
-VALIDATE $? "removing directory"
+VALIDATE $? "removing app directory"
 
 mkdir -p /app  &>> $LOGS_FILE
-VALIDATE $? "creating directory"
+VALIDATE $? "creating app directory"
 
 rm -rf /tmp/user.zip  &>> $LOGS_FILE
 VALIDATE $? "removing existing code"
 
 curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip  &>> $LOGS_FILE
 cd /app 
-unzip /tmp/catalogue.zip
+unzip /tmp/catalogue.zip &>> $LOGS_FILE
 VALIDATE $? "download and extracting the code"
 
 npm install &>> $LOGS_FILE
