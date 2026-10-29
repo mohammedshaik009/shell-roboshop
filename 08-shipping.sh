@@ -7,6 +7,7 @@ sudo chmod -R 755 $LOGS_FOLDER
 LOGS_FILE="$LOGS_FOLDER/$0.log"
 TIMESTAMP=$(date "+%Y-%m-%d %H:%M:%S")
 SCRIPT_DIR=$PWD
+MYSQL_HOST=mysql.mohammed.world
 R="\e[31m"
 G="\e[32m"
 Y="\e[33m"
@@ -36,7 +37,7 @@ if [ $? -ne 0 ]; then
     useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>> $LOGS_FILE
     VALIDATE $? "creating system user"
 else
-    echo "system user already created ...SKIPPING"
+    echo -e "system user already created ...$Y SKIPPING $N"
 fi
 
 rm -rf /app  &>> $LOGS_FILE
@@ -56,7 +57,7 @@ VALIDATE $? "download and extracted the code"
 cd /app &>> $LOGS_FILE
 mvn clean package &>> $LOGS_FILE
 mv target/shipping-1.0.jar shipping.jar &>> $LOGS_FILE
-VALIDATE $? "installing dependecies"
+VALIDATE $? "installing dependencies"
 
 cp $SCRIPT_DIR/shipping.service /etc/systemd/system/shipping.service &>> $LOGS_FILE
 VALIDATE $? "creating systemd service"
@@ -64,3 +65,17 @@ VALIDATE $? "creating systemd service"
 dnf install mysql -y &>> $LOGS_FILE
 VALIDATE $? "installing mysql client"
 
+
+mysql -h mysql.mohammed.world -u root -pRoboShop@1 -e "use cities"
+if [ $? -ne 0 ]; then
+    mysql -h $MYSQL_HOST -uroot -pRoboShop@1 < /app/db/schema.sql &>> $LOGS_FILE
+    mysql -h $MYSQL_HOST -uroot -pRoboShop@1 < /app/db/app-user.sql &>> $LOGS_FILE
+    mysql -h $MYSQL_HOST -uroot -pRoboShop@1 < /app/db/master-data.sql &>> $LOGS_FILE
+    VALIDATE $? "Load products"
+else
+    echo -e "Data already loaded ...$Y SKIPPING $N"
+fi
+
+systemctl enable shipping &>> $LOGS_FILE
+systemctl restart shipping &>> $LOGS_FILE
+VALIDATE $? "restarting shipping"
