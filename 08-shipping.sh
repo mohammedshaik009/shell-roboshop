@@ -50,10 +50,10 @@ VALIDATE $? "removing existing code"
 
 curl -L -o /tmp/shipping.zip https://roboshop-artifacts.s3.amazonaws.com/shipping-v3.zip &>> $LOGS_FILE
 cd /app &>> $LOGS_FILE
-unzip /tmp/shipping.zip
+unzip /tmp/shipping.zip &>> $LOGS_FILE
 VALIDATE $? "download and extracted the code"
 
-cd /app
+cd /app &>> $LOGS_FILE
 mvn clean package &>> $LOGS_FILE
 mv target/shipping-1.0.jar shipping.jar &>> $LOGS_FILE
 VALIDATE $? "installing dependecies"
@@ -63,5 +63,4 @@ VALIDATE $? "creating systemd service"
 
 dnf install mysql -y &>> $LOGS_FILE
 VALIDATE $? "installing mysql client"
-
 
