@@ -58,5 +58,11 @@ VALIDATE $? "download and extracted catalogue code"
 npm install &>> $LOGS_FILE
 VALIDATE $? "installing dependencies"
 
-cp $SCRIPT_DIR/catalogue.service /etc/systemd/system/catalogue.service
+cp $SCRIPT_DIR/catalogue.service /etc/systemd/system/catalogue.service &>> $LOGS_FILE
 VALIDATE $? "created systemctl service"
+
+cp $SCRIPT_DIR/mongo.repo /etc/yum.repos.d/mongo.repo &>> $LOGS_FILE
+VALIDATE $? "adding mongo repo"
+
+dnf install mongodb-mongosh -y &>> $LOGS_FILE
+VALIDATE $? "installing mongodb client"
