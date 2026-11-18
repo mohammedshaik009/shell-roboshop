@@ -15,7 +15,7 @@ VALIDATE $? "installing MongoDB-client"
 
 INDEX=$(mongosh --host mongodb.nazeer.shop --quiet --eval 'db.getMongo().getDBNames().indexOf("catalogue")')
 if [ $? -lt 0 ]; then
-    mongosh --host mongodb.nazeer.shop </app/db/master-data.js
+    mongosh --host mongodb.nazeer.shop </app/db/master-data.js &>> $LOGS_FILE
     VALIDATE $? "Load Products"
 else
     echo -e "$TIMESTAMP [INFO] products already loaded ....$Y SKIPPING $N"
