@@ -48,12 +48,12 @@ VALIDATE $? "removing app directory"
 mkdir -p /app &>> $LOGS_FILE
 VALIDATE $? "adding app directory"
 
-rm -rf /tmp/catalogue.zip &>> $LOGS_FILE
+rm -rf /tmp/$name.zip &>> $LOGS_FILE
 VALIDATE $? "removing existing code"
 
-curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip  &>> $LOGS_FILE
+curl -o /tmp/$name.zip https://roboshop-artifacts.s3.amazonaws.com/$name-v3.zip  &>> $LOGS_FILE
 cd /app 
-unzip /tmp/catalogue.zip &>> $LOGS_FILE
+unzip /tmp/$name.zip &>> $LOGS_FILE
 VALIDATE $? "download and extracted the code"
 }
 
@@ -66,12 +66,12 @@ npm install &>> $LOGS_FILE
 VALIDATE $? "installing dependencies"
 }
 
-systemd_service(){   
-cp $SCRIPT_DIR/catalogue.service /etc/systemd/system/catalogue.service &>> $LOGS_FILE
+systemd_setup(){   
+cp $SCRIPT_DIR/$name.service /etc/systemd/system/$name.service &>> $LOGS_FILE
 VALIDATE $? "adding systemd service"
 systemctl daemon-reload &>> $LOGS_FILE
-systemctl --now enable catalogue &>> $LOGS_FILE
-VALIDATE $? "enable and start catalogue"
+systemctl --now enable $name &>> $LOGS_FILE
+VALIDATE $? "enable and start $name"
 }
 print_total_time(){
     echo -e "$TIMESTAMP [INFO] script executed in $SECONDS seconds"
