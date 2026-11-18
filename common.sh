@@ -33,6 +33,46 @@ VALIDATE(){
     fi
 }
 
+app_setup(){
+id roboshop &>> $LOGS_FILE
+if [ $? -ne 0 ]; then
+    useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
+    VALIDATE $? "adding system user"
+else
+    echo -e "$TIMESTAMP [INFO] system user already created ...$Y SKIPPING $N"
+fi
+
+rm -rf /app &>> $LOGS_FILE
+VALIDATE $? "removing app directory"
+
+mkdir -p /app &>> $LOGS_FILE
+VALIDATE $? "adding app directory"
+
+rm -rf /tmp/catalogue.zip &>> $LOGS_FILE
+VALIDATE $? "removing existing code"
+
+curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip  &>> $LOGS_FILE
+cd /app 
+unzip /tmp/catalogue.zip &>> $LOGS_FILE
+VALIDATE $? "download and extracted the code"
+}
+
+nodejs_setup(){    
+dnf module disable nodejs -y &>> $LOGS_FILE
+dnf module enable nodejs:20 -y &>> $LOGS_FILE
+dnf install nodejs -y &>> $LOGS_FILE
+VALIDATE $? "installing nodejs"
+npm install &>> $LOGS_FILE
+VALIDATE $? "installing dependencies"
+}
+
+systemd_service(){   
+cp $SCRIPT_DIR/catalogue.service /etc/systemd/system/catalogue.service &>> $LOGS_FILE
+VALIDATE $? "adding systemd service"
+systemctl daemon-reload &>> $LOGS_FILE
+systemctl --now enable catalogue &>> $LOGS_FILE
+VALIDATE $? "enable and start catalogue"
+}
 print_total_time(){
     echo -e "$TIMESTAMP [INFO] script executed in $SECONDS seconds"
 }
