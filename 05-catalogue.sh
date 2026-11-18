@@ -14,7 +14,7 @@ dnf install mongodb-mongosh -y &>> $LOGS_FILE
 VALIDATE $? "installing MongoDB-client"
 
 INDEX=$(mongosh --host mongodb.nazeer.shop --quiet --eval 'db.getMongo().getDBNames().indexOf("catalogue")')
-if [ $? -lt 0 ]; then
+if [ $INDEX -lt 0 ]; then
     mongosh --host mongodb.nazeer.shop </app/db/master-data.js &>> $LOGS_FILE
     VALIDATE $? "Load Products"
 else
