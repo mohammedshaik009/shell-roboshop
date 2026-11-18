@@ -51,7 +51,7 @@ VALIDATE $? "adding app directory"
 rm -rf /tmp/$name.zip &>> $LOGS_FILE
 VALIDATE $? "removing existing code"
 
-curl -o /tmp/$name.zip https://roboshop-artifacts.s3.amazonaws.com/$name-v3.zip  &>> $LOGS_FILE
+curl -L -o /tmp/$name.zip https://roboshop-artifacts.s3.amazonaws.com/$name-v3.zip  &>> $LOGS_FILE
 cd /app 
 unzip /tmp/$name.zip &>> $LOGS_FILE
 VALIDATE $? "download and extracted the code"
