@@ -18,3 +18,6 @@ if [ -z $COUNT ] || [ $COUNT -eq 0 ]; then
 else
     echo -e "$TIMESTAMP [INFO] Master data already loaded ...$Y SKIPPING $N"
 fi
+
+app_restart
+print_total_time
