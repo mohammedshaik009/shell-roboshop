@@ -73,6 +73,11 @@ systemctl daemon-reload &>> $LOGS_FILE
 systemctl --now enable $name &>> $LOGS_FILE
 VALIDATE $? "enable and start $name"
 }
+
+app_restart(){
+    systemctl restart $name
+}
+
 print_total_time(){
     echo -e "$TIMESTAMP [INFO] script executed in $SECONDS seconds"
 }
