@@ -10,7 +10,7 @@ systemd_setup
 dnf install mysql -y &>> $LOGS_FILE
 VALIDATE $? "installing mysql-client"
 
-COUNT=$(mysql -h $MYSQL_HOST -u root -pRoboShop@1 -Nse "SELECT COUNT(*) FROM information_schema.schemata WHERE SCHEMA_NAME = 'cities';")
+COUNT=$(mysql -h $MYSQL_HOST -u root -pRoboShop@1 -Nse "SELECT COUNT(*) FROM information_schema.schemata WHERE SCHEMA_NAME = 'cities';") 2>> $LOGS_FILE
 if [ -z $COUNT ] || [ $COUNT -eq 0 ]; then
     mysql -h $MYSQL_HOST -uroot -pRoboShop@1 < /app/db/master-data.sql 2>> $LOGS_FILE
     mysql -h $MYSQL_HOST -uroot -pRoboShop@1 < /app/db/app-user.sql &>> $LOGS_FILE
