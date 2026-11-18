@@ -73,6 +73,14 @@ mvn clean package  &>> $LOGS_FILE
 mv target/shipping-1.0.jar shipping.jar  &>> $LOGS_FILE
 }
 
+python_setup(){
+dnf install python3 gcc python3-devel -y &>> $LOGS_FILE
+VALIDATE $? "installaing python"
+cd /app 
+pip3 install -r requirements.txt &>> $LOGS_FILE
+VALIDATE $? "installing dependenciens"
+}
+
 systemd_setup(){   
 cp $SCRIPT_DIR/$name.service /etc/systemd/system/$name.service &>> $LOGS_FILE
 VALIDATE $? "adding systemd service"
